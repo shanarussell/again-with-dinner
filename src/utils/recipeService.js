@@ -198,6 +198,10 @@ const recipeService = {
 
   // Update a recipe
   async updateRecipe(recipeId, updates) {
+    // Always serialize notes if present and not a string
+    if (updates.notes && typeof updates.notes !== 'string') {
+      updates = { ...updates, notes: JSON.stringify(updates.notes) };
+    }
     try {
       const { data, error } = await supabase
         .from('recipes')

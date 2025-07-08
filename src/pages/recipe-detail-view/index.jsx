@@ -91,7 +91,9 @@ const RecipeDetailView = () => {
           timer: typeof inst === 'object' ? inst.timer : undefined
         })) : 
         [],
-      notes: dbRecipe.notes || []
+      notes: typeof dbRecipe.notes === 'string'
+        ? JSON.parse(dbRecipe.notes)
+        : dbRecipe.notes || []
     };
   };
 
