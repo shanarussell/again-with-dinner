@@ -236,6 +236,18 @@ const RecipeDetailView = () => {
     }
   };
 
+  const handleNotesChange = async (newNotes) => {
+    if (!recipe?.id) return;
+    try {
+      const result = await recipeService.updateRecipe(recipe.id, { notes: newNotes });
+      if (result.success) {
+        setRecipe(prev => ({ ...prev, notes: newNotes }));
+      }
+    } catch (error) {
+      // Optionally show an error message
+    }
+  };
+
   const toggleCookingMode = () => {
     setCookingMode(!cookingMode);
     if (!cookingMode) {
@@ -356,7 +368,7 @@ const RecipeDetailView = () => {
               dietaryRestrictions={recipe.dietaryRestrictions}
             />
 
-            <RecipeNotes notes={recipe.notes} />
+            <RecipeNotes notes={recipe.notes} onNotesChange={handleNotesChange} />
           </div>
 
           {/* Desktop Layout - Two Column */}
@@ -395,7 +407,7 @@ const RecipeDetailView = () => {
 
           <div className="hidden lg:block lg:col-span-7 space-y-6">
             <InstructionsList instructions={recipe.instructions} ingredients={recipe.ingredients} cookingMode={cookingMode} onFinishCooking={() => setCookingMode(false)} />
-            <RecipeNotes notes={recipe.notes} />
+            <RecipeNotes notes={recipe.notes} onNotesChange={handleNotesChange} />
           </div>
         </div>
       </main>

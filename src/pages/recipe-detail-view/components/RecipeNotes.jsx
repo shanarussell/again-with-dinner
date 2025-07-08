@@ -3,26 +3,30 @@ import Icon from '../../../components/AppIcon';
 import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 
-const RecipeNotes = ({ notes: initialNotes = [] }) => {
+const RecipeNotes = ({ notes: initialNotes = [], onNotesChange }) => {
   const [notes, setNotes] = useState(initialNotes);
   const [newNote, setNewNote] = useState('');
   const [isAddingNote, setIsAddingNote] = useState(false);
 
-  const addNote = () => {
+  const addNote = async () => {
     if (newNote.trim()) {
       const note = {
         id: Date.now(),
         text: newNote.trim(),
         date: new Date().toLocaleDateString()
       };
-      setNotes([...notes, note]);
+      const updatedNotes = [...notes, note];
+      setNotes(updatedNotes);
       setNewNote('');
       setIsAddingNote(false);
+      if (onNotesChange) await onNotesChange(updatedNotes);
     }
   };
 
-  const deleteNote = (noteId) => {
-    setNotes(notes.filter(note => note.id !== noteId));
+  const deleteNote = async (noteId) => {
+    const updatedNotes = notes.filter(note => note.id !== noteId);
+    setNotes(updatedNotes);
+    if (onNotesChange) await onNotesChange(updatedNotes);
   };
 
   return (
