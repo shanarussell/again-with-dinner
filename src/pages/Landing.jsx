@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AppIcon from '../components/AppIcon';
+import { useAuth } from '../contexts/AuthContext';
 
 const features = [
   {
@@ -27,6 +28,13 @@ const features = [
 
 const Landing = () => {
   const navigate = useNavigate();
+  const { user, loading } = useAuth();
+
+  React.useEffect(() => {
+    if (!loading && user) {
+      navigate('/recipe-dashboard', { replace: true });
+    }
+  }, [user, loading, navigate]);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-orange-50 flex flex-col">

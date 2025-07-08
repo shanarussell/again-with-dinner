@@ -13,8 +13,8 @@ const UserRegistration = () => {
   const [registrationSuccess, setRegistrationSuccess] = useState(false);
 
   useEffect(() => {
-    if (user && !loading) {
-      navigate("/");
+    if (!loading && user) {
+      navigate('/recipe-dashboard', { replace: true });
     }
   }, [user, loading, navigate]);
 

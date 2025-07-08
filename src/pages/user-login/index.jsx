@@ -12,8 +12,8 @@ const UserLogin = () => {
   const [loginError, setLoginError] = useState(null);
 
   useEffect(() => {
-    if (user && !loading) {
-      navigate("/recipe-dashboard", { replace: true });
+    if (!loading && user) {
+      navigate('/recipe-dashboard', { replace: true });
     }
   }, [user, loading, navigate]);
 
