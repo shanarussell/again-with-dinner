@@ -5,7 +5,7 @@ import Button from '../../../components/ui/Button';
 import Input from '../../../components/ui/Input';
 import Icon from '../../../components/AppIcon';
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ onRegister, isLoading, disabled }) => {
   const navigate = useNavigate();
   const { signUp } = useAuth();
   const [formData, setFormData] = useState({
