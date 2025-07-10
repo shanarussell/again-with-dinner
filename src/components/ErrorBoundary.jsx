@@ -30,10 +30,6 @@ class ErrorBoundary extends React.Component {
     window.location.href = "/";
   };
 
-  handleRefresh = () => {
-    window.location.reload();
-  };
-
   render() {
     if (this.state.hasError) {
       return (
@@ -49,9 +45,7 @@ class ErrorBoundary extends React.Component {
             </div>
             <div className="flex flex-col gap-1 text-center">
               <h1 className="text-2xl font-medium text-neutral-800">Something went wrong</h1>
-              <p className="text-neutral-600 text-base w-8/12 mx-auto">
-                {this.state.error?.message || "We encountered an unexpected error while processing your request."}
-              </p>
+              <p className="text-neutral-600 text-base w-8/12 mx-auto">We encountered an unexpected error while processing your request.</p>
             </div>
             <div className="flex justify-center items-center gap-3 mt-6">
               <button
@@ -65,18 +59,6 @@ class ErrorBoundary extends React.Component {
                   <path d="M3 21v-5h5"/>
                 </svg>
                 Try Again
-              </button>
-              <button
-                onClick={this.handleRefresh}
-                className="bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded flex items-center gap-2 transition-colors duration-200 shadow-sm"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/>
-                  <path d="M21 3v5h-5"/>
-                  <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"/>
-                  <path d="M3 21v-5h5"/>
-                </svg>
-                Refresh Page
               </button>
               <button
                 onClick={this.handleGoHome}

@@ -326,7 +326,7 @@ const RecipeDetailView = () => {
   ];
 
   return (
-    <div className={`min-h-screen ${cookingMode ? 'bg-green-50' : 'bg-background'} ${cookingMode ? 'text-xl' : ''}`}>
+    <div className={`min-h-screen ${cookingMode ? 'bg-green-50' : 'bg-background'} ${cookingMode ? 'text-lg' : ''}`}>
       <ContextualActionHeader
         title={recipe.title}
         subtitle={`${recipe.category} • ${recipe.totalTime}`}
@@ -359,7 +359,6 @@ const RecipeDetailView = () => {
               ingredients={recipe.ingredients}
               servings={servings}
               originalServings={recipe.servings}
-              cookingMode={cookingMode}
             />
 
             <InstructionsList instructions={recipe.instructions} ingredients={recipe.ingredients} cookingMode={cookingMode} onFinishCooking={() => setCookingMode(false)} />
@@ -398,7 +397,6 @@ const RecipeDetailView = () => {
               ingredients={recipe.ingredients}
               servings={servings}
               originalServings={recipe.servings}
-              cookingMode={cookingMode}
             />
 
             <RecipeTags
