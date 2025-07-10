@@ -96,7 +96,7 @@ const IngredientsSection = ({ ingredients, onIngredientsChange }) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="block text-sm font-medium text-text-primary">
-          Ingredients *
+          Ingredients
         </label>
         <button
           type="button"

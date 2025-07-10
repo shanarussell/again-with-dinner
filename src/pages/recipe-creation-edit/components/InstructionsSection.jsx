@@ -97,7 +97,7 @@ const InstructionsSection = ({ instructions, onInstructionsChange }) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="block text-sm font-medium text-text-primary">
-          Instructions *
+          Instructions
         </label>
         <button
           type="button"

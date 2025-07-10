@@ -79,27 +79,33 @@ const RecipeCreationEdit = () => {
   const transformRecipeForDatabase = (recipeData) => {
     // Improved image handling logic - preserve existing image properly
     let imageUrl = null;
+    let shouldUpdateImage = false;
     
     if (recipeData.image) {
       // If image starts with 'data:', it's a new uploaded image (base64)
       if (recipeData.image.startsWith('data:')) {
         // This is a new image upload - keep the data URL
         imageUrl = recipeData.image;
+        shouldUpdateImage = true;
       } else {
         // This is an existing image URL - preserve it exactly as is
         imageUrl = recipeData.image;
+        shouldUpdateImage = true;
       }
     } else if (isEditing) {
       // If editing and no new image is set, check if the user ever removed the image
       if (typeof recipeData.originalImageUrl === 'string' && recipeData.originalImageUrl) {
         // User never removed the image, preserve it
         imageUrl = recipeData.originalImageUrl;
+        shouldUpdateImage = true;
       } else if (typeof existingRecipe?.image_url === 'string' && existingRecipe.image_url) {
         // Fallback to original recipe image if available
         imageUrl = existingRecipe.image_url;
+        shouldUpdateImage = true;
       } else {
         // Only set to null if both are null/empty (user removed image)
         imageUrl = null;
+        shouldUpdateImage = true;
       }
     }
 
@@ -110,7 +116,7 @@ const RecipeCreationEdit = () => {
     
     const parsedIngredients = parseIngredientList(ingredientTexts);
 
-    return {
+    const baseData = {
       user_id: user?.id,
       title: recipeData.title.trim(),
       description: '', // Could be added later
@@ -126,10 +132,16 @@ const RecipeCreationEdit = () => {
       servings: recipeData.metadata.servings || 4,
       difficulty: recipeData.metadata.difficulty ? recipeData.metadata.difficulty.toLowerCase() : 'medium',
       category: recipeData.metadata.category || 'main_course',
-      image_url: imageUrl,
       is_favorite: isEditing ? existingRecipe?.is_favorite || false : false,
       rating: isEditing ? existingRecipe?.rating || 0.0 : 0.0
     };
+
+    // Only include image_url if it should be updated
+    if (shouldUpdateImage) {
+      baseData.image_url = imageUrl;
+    }
+
+    return baseData;
   };
 
   const handleSave = async () => {
@@ -197,19 +209,7 @@ const RecipeCreationEdit = () => {
       alert('Please enter a recipe title');
       return false;
     }
-    
-    const hasIngredients = recipe.ingredients.some(ing => ing.text.trim());
-    if (!hasIngredients) {
-      alert('Please add at least one ingredient');
-      return false;
-    }
-    
-    const hasInstructions = recipe.instructions.some(inst => inst.text.trim());
-    if (!hasInstructions) {
-      alert('Please add at least one instruction');
-      return false;
-    }
-    
+    // Ingredients and instructions are now optional
     return true;
   };
 
