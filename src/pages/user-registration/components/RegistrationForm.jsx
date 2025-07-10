@@ -17,7 +17,6 @@ const RegistrationForm = ({ onRegister, isLoading, disabled }) => {
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const validateEmail = (email) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -112,30 +111,11 @@ const RegistrationForm = ({ onRegister, isLoading, disabled }) => {
       return;
     }
 
-    setIsLoading(true);
     setErrors({});
     
-    try {
-      // Use AuthContext signUp function with Supabase
-      const result = await signUp(formData.email, formData.password, {
-        full_name: formData.fullName
-      });
-      
-      if (result?.success) {
-        // Registration successful - redirect to dashboard
-        navigate('/recipe-dashboard');
-      } else {
-        // Handle registration errors
-        setErrors({
-          submit: result?.error || 'Registration failed. Please try again.'
-        });
-      }
-    } catch (error) {
-      setErrors({
-        submit: 'Something went wrong during registration. Please try again.'
-      });
-    } finally {
-      setIsLoading(false);
+    // Call the parent's onRegister function instead of handling registration here
+    if (onRegister) {
+      await onRegister(formData);
     }
   };
 
@@ -331,7 +311,7 @@ const RegistrationForm = ({ onRegister, isLoading, disabled }) => {
           variant="primary"
           fullWidth
           loading={isLoading}
-          disabled={isLoading}
+          disabled={isLoading || disabled}
           className="h-12"
         >
           {isLoading ? 'Creating Account...' : 'Create Account'}
