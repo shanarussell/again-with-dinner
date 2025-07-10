@@ -1,9 +1,7 @@
-const CACHE_NAME = 'recipevault-v1';
+const CACHE_NAME = 'recipevault-v2';
 const urlsToCache = [
   '/',
-  '/index.html',
-  '/static/js/bundle.js',
-  '/static/css/main.css',
+  '/index.html'
 ];
 
 self.addEventListener('install', (event) => {

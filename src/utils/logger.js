@@ -8,61 +8,93 @@ class Logger {
 
   // Info level logging
   info(message, ...args) {
-    if (this.isDevelopment) {
-      console.log(`[INFO] ${message}`, ...args);
+    try {
+      if (this.isDevelopment) {
+        console.log(`[INFO] ${message}`, ...args);
+      }
+      // In production, you could send to a logging service
+    } catch (error) {
+      console.log(`[INFO] ${message}`);
     }
-    // In production, you could send to a logging service
   }
 
   // Warning level logging
   warn(message, ...args) {
-    if (this.isDevelopment) {
-      console.warn(`[WARN] ${message}`, ...args);
+    try {
+      if (this.isDevelopment) {
+        console.warn(`[WARN] ${message}`, ...args);
+      }
+      // In production, you could send to a logging service
+    } catch (error) {
+      console.warn(`[WARN] ${message}`);
     }
-    // In production, you could send to a logging service
   }
 
   // Error level logging
   error(message, error = null, ...args) {
-    if (this.isDevelopment) {
-      console.error(`[ERROR] ${message}`, error, ...args);
-    } else {
-      // In production, send to error monitoring service
-      // Example: Sentry.captureException(error);
-      console.error(`[ERROR] ${message}`, error);
+    try {
+      if (this.isDevelopment) {
+        console.error(`[ERROR] ${message}`, error, ...args);
+      } else {
+        // In production, send to error monitoring service
+        // Example: Sentry.captureException(error);
+        console.error(`[ERROR] ${message}`, error);
+      }
+    } catch (err) {
+      console.error(`[ERROR] ${message}`);
     }
   }
 
   // Debug level logging (only in development)
   debug(message, ...args) {
-    if (this.isDevelopment) {
-      console.log(`[DEBUG] ${message}`, ...args);
+    try {
+      if (this.isDevelopment) {
+        console.log(`[DEBUG] ${message}`, ...args);
+      }
+    } catch (error) {
+      console.log(`[DEBUG] ${message}`);
     }
   }
 
   // Performance logging
   time(label) {
-    if (this.isDevelopment) {
-      console.time(`[PERF] ${label}`);
+    try {
+      if (this.isDevelopment) {
+        console.time(`[PERF] ${label}`);
+      }
+    } catch (error) {
+      // Silently fail
     }
   }
 
   timeEnd(label) {
-    if (this.isDevelopment) {
-      console.timeEnd(`[PERF] ${label}`);
+    try {
+      if (this.isDevelopment) {
+        console.timeEnd(`[PERF] ${label}`);
+      }
+    } catch (error) {
+      // Silently fail
     }
   }
 
   // Group logging for better organization
   group(label) {
-    if (this.isDevelopment) {
-      console.group(`[GROUP] ${label}`);
+    try {
+      if (this.isDevelopment) {
+        console.group(`[GROUP] ${label}`);
+      }
+    } catch (error) {
+      // Silently fail
     }
   }
 
   groupEnd() {
-    if (this.isDevelopment) {
-      console.groupEnd();
+    try {
+      if (this.isDevelopment) {
+        console.groupEnd();
+      }
+    } catch (error) {
+      // Silently fail
     }
   }
 }

@@ -4,6 +4,8 @@ import App from './App';
 import './styles/index.css';
 
 // Register service worker for better caching
+// Temporarily disabled to debug module loading issues
+/*
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
@@ -15,6 +17,7 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+*/
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
