@@ -87,27 +87,18 @@ const RecipeCreationEdit = () => {
         // This is a new image upload - keep the data URL
         imageUrl = recipeData.image;
         shouldUpdateImage = true;
-      } else {
-        // This is an existing image URL - preserve it exactly as is
+      } else if (recipeData.image !== existingRecipe?.image_url) {
+        // This is an existing image URL that's different from the original
         imageUrl = recipeData.image;
         shouldUpdateImage = true;
       }
-    } else if (isEditing) {
-      // If editing and no new image is set, check if the user ever removed the image
-      if (typeof recipeData.originalImageUrl === 'string' && recipeData.originalImageUrl) {
-        // User never removed the image, preserve it
-        imageUrl = recipeData.originalImageUrl;
-        shouldUpdateImage = true;
-      } else if (typeof existingRecipe?.image_url === 'string' && existingRecipe.image_url) {
-        // Fallback to original recipe image if available
-        imageUrl = existingRecipe.image_url;
-        shouldUpdateImage = true;
-      } else {
-        // Only set to null if both are null/empty (user removed image)
-        imageUrl = null;
-        shouldUpdateImage = true;
-      }
+      // If image is the same as existing, don't update it
+    } else if (isEditing && recipeData.image === null && existingRecipe?.image_url) {
+      // User explicitly removed the image
+      imageUrl = null;
+      shouldUpdateImage = true;
     }
+    // If no image field is present and we're editing, don't touch the image
 
     // Parse ingredients into structured format
     const ingredientTexts = recipeData.ingredients
