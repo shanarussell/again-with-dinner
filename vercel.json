@@ -3,7 +3,10 @@
   "outputDirectory": "build",
   "framework": "vite",
   "rewrites": [
-    { "source": "/(.*)", "destination": "/index.html" }
+    {
+      "source": "/((?!assets|favicon.ico|manifest.json|robots.txt|service-worker.js|sw.js).*)",
+      "destination": "/index.html"
+    }
   ],
   "headers": [
     {
