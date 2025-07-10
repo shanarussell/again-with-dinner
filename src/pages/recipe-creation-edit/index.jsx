@@ -171,7 +171,21 @@ const RecipeCreationEdit = () => {
         setSaveMessage('Recipe saved successfully!');
         setHasUnsavedChanges(false);
         
-        // Clear success message after 3 seconds
+        // Navigate to recipe detail view after successful update
+        if (isEditing && recipe.id) {
+          navigate('/recipe-detail-view', { 
+            state: { recipe: { ...recipe, ...result.data } },
+            replace: true 
+          });
+        } else if (result.data?.id) {
+          // For new recipes, navigate to the detail view
+          navigate('/recipe-detail-view', { 
+            state: { recipe: { ...recipe, ...result.data } },
+            replace: true 
+          });
+        }
+        
+        // Clear success message after 3 seconds (only if still on this page)
         setTimeout(() => {
           setSaveMessage(null);
         }, 3000);
