@@ -243,7 +243,7 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
               </button>
               
               <div className="flex-1 min-w-0">
-                <p className={`text-sm leading-relaxed ${
+                <p className={`${cookingMode ? 'text-base' : 'text-sm'} leading-relaxed ${
                   completedSteps.has(index)
                     ? 'text-success-700' :'text-text-primary'
                 }`}>

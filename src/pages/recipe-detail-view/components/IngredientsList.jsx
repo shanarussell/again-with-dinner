@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import Icon from '../../../components/AppIcon';
 
-const IngredientsList = ({ ingredients, servings, originalServings }) => {
+const IngredientsList = ({ ingredients, servings, originalServings, cookingMode = false }) => {
   const [checkedIngredients, setCheckedIngredients] = useState(new Set());
   
   const toggleIngredient = (index) => {
@@ -53,33 +53,20 @@ const IngredientsList = ({ ingredients, servings, originalServings }) => {
             </button>
             
             <div className="flex-1 min-w-0">
-              <span className={`text-sm ${
-                checkedIngredients.has(index) 
-                  ? 'line-through text-success-600' :'text-text-primary'
+              <p className={`${cookingMode ? 'text-base' : 'text-sm'} leading-relaxed ${
+                checkedIngredients.has(index) ? 'text-success-700' : 'text-text-primary'
               }`}>
-                {ingredient.amount && (
-                  <span className="font-medium">
-                    {(() => {
-                      const scaled = scaleAmount(ingredient.amount);
-                      // Only show unit if not already in amount
-                      if (
-                        ingredient.unit &&
-                        typeof scaled === 'string' &&
-                        !scaled.toLowerCase().includes(ingredient.unit.toLowerCase())
-                      ) {
-                        return `${scaled} ${ingredient.unit} `;
-                      }
-                      return `${scaled} `;
-                    })()}
+                <span className="font-medium">
+                  {scaleAmount(ingredient.amount)} {ingredient.unit}
+                </span>
+                {' '}
+                <span className="capitalize">{ingredient.name}</span>
+                {ingredient.notes && (
+                  <span className="text-text-secondary italic">
+                    {' '}({ingredient.notes})
                   </span>
                 )}
-                {ingredient.name}
-              </span>
-              {ingredient.notes && (
-                <p className="text-xs text-text-secondary mt-1">
-                  {ingredient.notes}
-                </p>
-              )}
+              </p>
             </div>
           </div>
         ))}
