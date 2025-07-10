@@ -23,9 +23,77 @@ const parseTimeFromText = (text) => {
   return totalSeconds > 0 ? totalSeconds : null;
 };
 
+// Full-screen timer overlay component
+const FullScreenTimer = ({ timer, onClose, onPause, onResume, onReset, onStop }) => {
+  const formatTime = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const secs = seconds % 60;
+    
+    if (hours > 0) {
+      return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    }
+    return `${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-90 z-50 flex items-center justify-center">
+      <div className="text-center text-white">
+        <div className="text-8xl font-mono mb-8">
+          {formatTime(timer.secondsLeft)}
+        </div>
+        
+        {timer.finished && (
+          <div className="text-green-400 text-3xl mb-8 animate-bounce">Time's up!</div>
+        )}
+        
+        <div className="text-xl mb-8">{timer.label}</div>
+        
+        <div className="flex justify-center space-x-4">
+          {!timer.paused && !timer.finished && (
+            <button
+              className="px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 text-lg"
+              onClick={onPause}
+            >
+              Pause
+            </button>
+          )}
+          {timer.paused && !timer.finished && (
+            <button
+              className="px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 text-lg"
+              onClick={onResume}
+            >
+              Resume
+            </button>
+          )}
+          <button
+            className="px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 text-lg"
+            onClick={onReset}
+          >
+            Start Over
+          </button>
+          <button
+            className="px-6 py-3 bg-orange-500 rounded-lg hover:bg-orange-600 text-lg"
+            onClick={onStop}
+          >
+            Stop
+          </button>
+          <button
+            className="px-6 py-3 bg-gray-700 rounded-lg hover:bg-gray-600 text-lg"
+            onClick={onClose}
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 const InstructionsList = ({ instructions, ingredients = [], cookingMode = false, onFinishCooking }) => {
   const [completedSteps, setCompletedSteps] = useState(new Set());
   const [activeTimer, setActiveTimer] = useState(null); // { stepIndex, secondsLeft, label, totalSeconds, paused }
+  const [showFullScreenTimer, setShowFullScreenTimer] = useState(false);
   const timerRef = React.useRef();
   const [timerFinished, setTimerFinished] = useState(false);
   const prevCookingMode = React.useRef(cookingMode);
@@ -42,6 +110,7 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
       setCompletedSteps(new Set());
       setActiveTimer(null);
       setTimerFinished(false);
+      setShowFullScreenTimer(false);
       if (timerRef.current) clearInterval(timerRef.current);
     }
     prevCookingMode.current = cookingMode;
@@ -92,7 +161,7 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
               timerAudioRef.current.play();
             }
           } catch {}
-          return { ...prev, secondsLeft: 0, paused: true };
+          return { ...prev, secondsLeft: 0, paused: true, finished: true };
         }
         return { ...prev, secondsLeft: prev.secondsLeft - 1 };
       });
@@ -102,13 +171,14 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
 
   const startTimer = (stepIndex, seconds, label) => {
     if (timerRef.current) clearInterval(timerRef.current);
-    setActiveTimer({ stepIndex, secondsLeft: seconds, totalSeconds: seconds, label, paused: false });
+    setActiveTimer({ stepIndex, secondsLeft: seconds, totalSeconds: seconds, label, paused: false, finished: false });
     setTimerFinished(false);
   };
   const stopTimer = () => {
     if (timerRef.current) clearInterval(timerRef.current);
     setActiveTimer(null);
     setTimerFinished(false);
+    setShowFullScreenTimer(false);
   };
   const pauseTimer = () => {
     setActiveTimer(prev => prev ? { ...prev, paused: true } : null);
@@ -117,7 +187,7 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
     setActiveTimer(prev => prev ? { ...prev, paused: false } : null);
   };
   const resetTimer = () => {
-    setActiveTimer(prev => prev ? { ...prev, secondsLeft: prev.totalSeconds, paused: false } : null);
+    setActiveTimer(prev => prev ? { ...prev, secondsLeft: prev.totalSeconds, paused: false, finished: false } : null);
     setTimerFinished(false);
   };
 
@@ -253,6 +323,12 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
                         className="px-3 py-1 bg-orange-500 rounded hover:bg-orange-600 text-sm"
                         onClick={stopTimer}
                       >Stop</button>
+                      <button
+                        className="px-3 py-1 bg-blue-500 rounded hover:bg-blue-600 text-sm"
+                        onClick={() => setShowFullScreenTimer(true)}
+                      >
+                        <Icon name="Maximize2" size={14} color="white" />
+                      </button>
                     </div>
                   </div>
                 )}
@@ -274,6 +350,18 @@ const InstructionsList = ({ instructions, ingredients = [], cookingMode = false,
           );
         })}
       </div>
+
+      {/* Full-screen timer overlay */}
+      {showFullScreenTimer && activeTimer && (
+        <FullScreenTimer
+          timer={activeTimer}
+          onClose={() => setShowFullScreenTimer(false)}
+          onPause={pauseTimer}
+          onResume={resumeTimer}
+          onReset={resetTimer}
+          onStop={stopTimer}
+        />
+      )}
     </div>
   );
 };
